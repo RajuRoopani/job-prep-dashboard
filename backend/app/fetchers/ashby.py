@@ -1,5 +1,5 @@
+import html as html_module
 import logging
-import re
 import httpx
 
 from app.fetchers.base import AbstractFetcher, NormalizedJob
@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 _BASE = "https://api.ashbyhq.com/posting-api/job-board/{board_id}"
 
 
-def _strip_html(html: str) -> str:
-    return re.sub(r"<[^>]+>", " ", html or "").strip()
+def _clean_description(raw: str) -> str:
+    return html_module.unescape(raw or "").strip()
 
 
 class AshbyFetcher(AbstractFetcher):
@@ -35,7 +35,7 @@ class AshbyFetcher(AbstractFetcher):
             location = job.get("location", "") or "Remote"
             remote = job.get("isRemote", False) or "remote" in location.lower()
             dept = job.get("department", "")
-            description = _strip_html(job.get("descriptionHtml", "") or job.get("description", ""))[:3000]
+            description = _clean_description(job.get("descriptionHtml", "") or job.get("description", ""))[:5000]
             jobs.append(
                 NormalizedJob(
                     external_id=job.get("id", ""),

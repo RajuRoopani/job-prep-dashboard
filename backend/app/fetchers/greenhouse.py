@@ -1,5 +1,5 @@
+import html as html_module
 import logging
-import re
 import httpx
 
 from app.fetchers.base import AbstractFetcher, NormalizedJob
@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 _BASE = "https://boards-api.greenhouse.io/v1/boards/{board_id}/jobs?content=true"
 
 
-def _strip_html(html: str) -> str:
-    return re.sub(r"<[^>]+>", " ", html or "").strip()
+def _clean_description(raw: str) -> str:
+    return html_module.unescape(raw or "").strip()
 
 
 class GreenhouseFetcher(AbstractFetcher):
@@ -39,7 +39,7 @@ class GreenhouseFetcher(AbstractFetcher):
                 for loc in [location] + [o.get("name", "") for o in job.get("offices", [])]
             )
             dept = ", ".join(d.get("name", "") for d in job.get("departments", []))
-            description = _strip_html(job.get("content", ""))[:3000]
+            description = _clean_description(job.get("content", ""))[:5000]
             jobs.append(
                 NormalizedJob(
                     external_id=str(job["id"]),

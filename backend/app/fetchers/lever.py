@@ -1,5 +1,5 @@
+import html as html_module
 import logging
-import re
 import httpx
 
 from app.fetchers.base import AbstractFetcher, NormalizedJob
@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 _BASE = "https://api.lever.co/v0/postings/{board_id}?mode=json"
 
 
-def _strip_html(html: str) -> str:
-    return re.sub(r"<[^>]+>", " ", html or "").strip()
+def _clean_description(raw: str) -> str:
+    return html_module.unescape(raw or "").strip()
 
 
 class LeverFetcher(AbstractFetcher):
@@ -36,10 +36,10 @@ class LeverFetcher(AbstractFetcher):
             remote = "remote" in location.lower()
             dept = job.get("categories", {}).get("department", "")
             description_parts = [
-                _strip_html(section.get("content", ""))
+                _clean_description(section.get("content", ""))
                 for section in (job.get("descriptionBody", {}).get("descriptionSections") or [])
             ]
-            description = " ".join(description_parts)[:3000]
+            description = "".join(description_parts)[:5000]
             jobs.append(
                 NormalizedJob(
                     external_id=job.get("id", ""),
