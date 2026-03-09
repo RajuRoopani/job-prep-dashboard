@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 
 const GRADIENTS = [
   "from-violet-500 to-indigo-600",
@@ -24,29 +23,6 @@ function pickGradient(name: string): string {
   return GRADIENTS[Math.abs(hash) % GRADIENTS.length];
 }
 
-function Initials({ name, size, className }: { name: string; size: number; className?: string }) {
-  const initials = name
-    .split(/\s+/)
-    .map((w) => w[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-  const gradient = pickGradient(name);
-  return (
-    <div
-      className={`bg-gradient-to-br ${gradient} flex items-center justify-center flex-shrink-0 ${className ?? ""}`}
-      style={{ width: size, height: size }}
-    >
-      <span
-        className="text-white font-bold select-none"
-        style={{ fontSize: Math.max(10, Math.round(size * 0.35)) }}
-      >
-        {initials}
-      </span>
-    </div>
-  );
-}
-
 interface CompanyLogoProps {
   name: string;
   logoUrl?: string | null;
@@ -55,6 +31,12 @@ interface CompanyLogoProps {
   imgClassName?: string;
 }
 
+/**
+ * Renders a company logo with a gradient-initials fallback.
+ * Initials are always rendered as the base layer. If a logo URL is
+ * provided and loads successfully, the image overlays on top.
+ * No broken-image icons ever appear.
+ */
 export function CompanyLogo({
   name,
   logoUrl,
@@ -62,21 +44,46 @@ export function CompanyLogo({
   className,
   imgClassName,
 }: CompanyLogoProps) {
-  const [failed, setFailed] = useState(false);
+  const [imgFailed, setImgFailed] = useState(false);
 
-  if (!logoUrl || failed) {
-    return <Initials name={name} size={size} className={className} />;
-  }
+  const initials = name
+    .split(/\s+/)
+    .map((w) => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  const gradient = pickGradient(name);
+  const fontSize = Math.max(10, Math.round(size * 0.35));
+  const showImage = !!logoUrl && !imgFailed;
 
   return (
-    <Image
-      src={logoUrl}
-      alt={name}
-      width={size}
-      height={size}
-      className={imgClassName ?? "object-contain"}
-      onError={() => setFailed(true)}
-      unoptimized
-    />
+    <div
+      className={`relative overflow-hidden flex-shrink-0 ${className ?? ""}`}
+      style={{ width: size, height: size }}
+    >
+      {/* Gradient initials — always rendered as base */}
+      <div
+        className={`absolute inset-0 bg-gradient-to-br ${gradient} flex items-center justify-center`}
+      >
+        <span
+          className="text-white font-bold select-none leading-none"
+          style={{ fontSize }}
+        >
+          {initials}
+        </span>
+      </div>
+
+      {/* Image overlay — rendered on top when URL is available */}
+      {showImage && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={logoUrl}
+          alt={name}
+          className={`absolute inset-0 w-full h-full bg-white ${imgClassName ?? "object-contain p-1"}`}
+          onError={() => setImgFailed(true)}
+        />
+      )}
+    </div>
   );
 }
