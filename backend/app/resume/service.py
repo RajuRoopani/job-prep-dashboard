@@ -147,7 +147,7 @@ Respond with ONLY the JSON array."""
 
 
 async def analyze_resume(resume_text: str) -> dict:
-    """Full pipeline: parse resume + fetch jobs + rank matches."""
+    """Full pipeline: parse resume + fetch jobs + rank matches + persist result."""
     profile = await parse_resume(resume_text)
     logger.info("Parsed profile: %s (%s, %d yrs)", profile.get("name"), profile.get("level"), profile.get("years_experience", 0))
 
@@ -168,7 +168,29 @@ async def analyze_resume(resume_text: str) -> dict:
     jobs = [dict(r) for r in rows]
     matches = await match_jobs(profile, jobs)
     logger.info("Matched %d jobs for %s", len(matches), profile.get("name"))
-    return {"profile": profile, "matches": matches}
+
+    # Persist analysis to database
+    try:
+        async with get_db() as conn:
+            analysis_id = await conn.fetchval(
+                """
+                INSERT INTO resume_analyses
+                    (candidate_name, candidate_level, resume_text, profile, matches)
+                VALUES ($1, $2, $3, $4::jsonb, $5::jsonb)
+                RETURNING id
+                """,
+                profile.get("name", "Anonymous"),
+                profile.get("level", "L5"),
+                resume_text,
+                json.dumps(profile),
+                json.dumps(matches),
+            )
+        logger.info("Stored resume analysis id=%d for %s", analysis_id, profile.get("name"))
+    except Exception as e:
+        logger.warning("Failed to persist resume analysis: %s", e)
+        analysis_id = None
+
+    return {"profile": profile, "matches": matches, "analysis_id": analysis_id}
 
 
 async def generate_personalized_prep(
