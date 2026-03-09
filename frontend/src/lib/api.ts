@@ -82,6 +82,14 @@ export function analyzeResume(resumeText: string): Promise<ResumeAnalysis> {
   } as RequestInit);
 }
 
+export function researchCompany(companyName: string, roleHint?: string): Promise<{ company_name: string; content: string; cached: boolean; generated_at: string }> {
+  return apiFetch("/api/research/company", {
+    method: "POST",
+    body: JSON.stringify({ company_name: companyName, role_hint: roleHint ?? "" }),
+    next: { revalidate: 0 },
+  } as RequestInit);
+}
+
 export function refreshJobs(): Promise<{ refreshed: number }> {
   return apiFetch<{ refreshed: number }>("/api/refresh", { method: "POST" });
 }
