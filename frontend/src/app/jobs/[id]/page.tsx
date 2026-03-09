@@ -109,7 +109,10 @@ export default async function JobDetailPage({ params }: Props) {
               </svg>
               Job Description
             </h2>
-            <p className="text-sm text-[var(--text-2)] leading-relaxed whitespace-pre-line">{job.description}</p>
+            <div
+              className="job-description text-sm text-[var(--text-2)] leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: job.description }}
+            />
           </div>
         )}
       </div>

@@ -167,3 +167,20 @@
 
 /* HLjs dark override */
 .hljs { background: transparent !important; }
+
+/* Job description — raw HTML from ATS APIs */
+.job-description h1,.job-description h2,.job-description h3,.job-description h4 { color: var(--text-1); font-weight: 700; margin: 1.25rem 0 0.5rem; letter-spacing: -0.015em; }
+.job-description h1 { font-size: 1.125rem; }
+.job-description h2 { font-size: 1rem; }
+.job-description h3,.job-description h4 { font-size: 0.9375rem; }
+.job-description p { margin: 0 0 0.75rem; color: var(--text-2); line-height: 1.7; }
+.job-description ul,.job-description ol { padding-left: 1.25rem; margin: 0 0 0.75rem; }
+.job-description li { margin: 0.25rem 0; color: var(--text-2); line-height: 1.6; }
+.job-description ul li { list-style: disc; }
+.job-description ol li { list-style: decimal; }
+.job-description strong,.job-description b { font-weight: 600; color: var(--text-1); }
+.job-description em,.job-description i { color: var(--text-2); }
+.job-description a { color: var(--accent-light); text-decoration: none; border-bottom: 1px solid rgba(129,140,248,0.3); }
+.job-description a:hover { border-bottom-color: var(--accent-light); }
+.job-description br { display: block; content: ""; margin: 0.1rem 0; }
+.job-description div,.job-description span { color: inherit; }
