@@ -2,24 +2,24 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="bg-white border-t border-slate-100 mt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
-              <span className="text-white text-sm font-bold">S</span>
+    <footer className="border-t border-[var(--border)] mt-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2.5">
+            <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-[var(--accent)] to-[#8B5CF6] flex items-center justify-center">
+              <svg width="12" height="12" viewBox="0 0 18 18" fill="none">
+                <path d="M9 3L13.5 12H4.5L9 3Z" fill="white" fillOpacity="0.9"/>
+                <path d="M9 8V14" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+              </svg>
             </div>
-            <div>
-              <p className="text-sm font-semibold text-slate-800">SWE Prep</p>
-              <p className="text-xs text-slate-400">AI-powered interview preparation</p>
-            </div>
+            <span className="text-xs text-[var(--text-3)]">Ascend · Career Intelligence powered by Claude Opus</span>
           </div>
-          <div className="flex items-center gap-6 text-sm text-slate-400">
-            <Link href="/" className="hover:text-slate-600 transition-colors">Jobs</Link>
-            <Link href="/companies" className="hover:text-slate-600 transition-colors">Companies</Link>
-            <span>Powered by Claude Opus</span>
-            <span>·</span>
-            <span>Greenhouse · Lever · Ashby</span>
+
+          <div className="flex items-center gap-5">
+            <Link href="/" className="text-xs text-[var(--text-3)] hover:text-[var(--text-2)] transition-colors">Jobs</Link>
+            <Link href="/companies" className="text-xs text-[var(--text-3)] hover:text-[var(--text-2)] transition-colors">Companies</Link>
+            <Link href="/match" className="text-xs text-[var(--text-3)] hover:text-[var(--text-2)] transition-colors">Career Match</Link>
+            <a href="/api/docs" target="_blank" rel="noopener noreferrer" className="text-xs text-[var(--text-3)] hover:text-[var(--text-2)] transition-colors">API</a>
           </div>
         </div>
       </div>

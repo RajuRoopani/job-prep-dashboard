@@ -21,37 +21,42 @@ export default async function CompanyPage({ params }: Props) {
   return (
     <>
       {/* Hero */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900 pt-10 pb-16">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="mb-6 text-sm flex items-center gap-2 text-slate-400">
-            <Link href="/companies" className="hover:text-white transition-colors">Companies</Link>
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <div className="relative overflow-hidden bg-[var(--bg)] pt-10 pb-16">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_30%_-10%,rgba(139,92,246,0.15),transparent)] pointer-events-none" />
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <nav className="mb-6 text-xs flex items-center gap-2 text-[var(--text-3)]">
+            <Link href="/companies" className="hover:text-[var(--text-2)] transition-colors">Companies</Link>
+            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
-            <span className="text-slate-300">{company.name}</span>
+            <span className="text-[var(--text-2)]">{company.name}</span>
           </nav>
 
           <div className="flex items-start gap-5">
-            <div className="w-18 h-18 w-16 h-16 rounded-2xl bg-white/10 border border-white/10 flex items-center justify-center overflow-hidden flex-shrink-0">
+            <div className="w-16 h-16 rounded-2xl bg-[var(--elevated)] border border-[var(--border)] flex items-center justify-center overflow-hidden flex-shrink-0">
               {company.logo_url ? (
                 <Image src={company.logo_url} alt={company.name} width={64} height={64} className="object-contain p-2" />
               ) : (
-                <span className="text-2xl font-bold text-white/40">{company.name[0]}</span>
+                <span className="text-2xl font-bold text-[var(--text-3)]">{company.name[0]}</span>
               )}
             </div>
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <h1 className="text-3xl font-extrabold text-white tracking-tight">{company.name}</h1>
-                <span className={`badge ${company.tier === "faang_plus" ? "bg-amber-400/20 text-amber-300" : "bg-violet-400/20 text-violet-300"}`}>
+              <div className="flex items-center gap-3 mb-2">
+                <h1 className="text-3xl font-extrabold text-[var(--text-1)] tracking-tight">{company.name}</h1>
+                <span className={`badge border ${
+                  company.tier === "faang_plus"
+                    ? "text-[var(--amber)] bg-[var(--amber)]/10 border-[var(--amber)]/20"
+                    : "text-[#C084FC] bg-[#8B5CF6]/10 border-[#8B5CF6]/20"
+                }`}>
                   {company.tier === "faang_plus" ? "FAANG+" : "AI Startup"}
                 </span>
               </div>
-              <div className="flex items-center gap-3 text-slate-400 text-sm">
+              <div className="flex items-center gap-3 text-[var(--text-3)] text-xs font-mono">
                 <span>📍 {company.hq}</span>
                 <span>·</span>
-                <span>👥 {company.size} employees</span>
+                <span>👥 {company.size}</span>
                 <span>·</span>
-                <span className={company.open_roles > 0 ? "text-emerald-400 font-semibold" : ""}>
+                <span className={company.open_roles > 0 ? "text-[var(--green)] font-semibold" : ""}>
                   {company.open_roles} open {company.open_roles === 1 ? "role" : "roles"}
                 </span>
               </div>
@@ -63,32 +68,30 @@ export default async function CompanyPage({ params }: Props) {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-5 pb-16 space-y-5">
         {/* About */}
         <div className="card p-6">
-          <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-3">About</h2>
-          <p className="text-slate-700 leading-relaxed">{company.about}</p>
+          <h2 className="text-[10px] font-bold text-[var(--text-3)] uppercase tracking-widest mb-3 font-mono">About</h2>
+          <p className="text-[var(--text-2)] leading-relaxed text-sm">{company.about}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {/* Interview loop */}
           {company.loop_desc && (
             <div className="card p-6">
-              <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+              <h2 className="text-[10px] font-bold text-[var(--text-3)] uppercase tracking-widest mb-3 flex items-center gap-2 font-mono">
                 <span>🔄</span> Interview Loop
               </h2>
-              <p className="text-sm text-slate-700 leading-relaxed">{company.loop_desc}</p>
+              <p className="text-sm text-[var(--text-2)] leading-relaxed">{company.loop_desc}</p>
             </div>
           )}
 
-          {/* Comp */}
           {company.comp_range && (
             <div className="card p-6">
-              <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+              <h2 className="text-[10px] font-bold text-[var(--text-3)] uppercase tracking-widest mb-3 flex items-center gap-2 font-mono">
                 <span>💰</span> Total Compensation
               </h2>
               <div className="space-y-2">
                 {company.comp_range.split("|").map((range, i) => (
-                  <div key={i} className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50">
-                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 flex-shrink-0" />
-                    <p className="text-sm text-slate-700">{range.trim()}</p>
+                  <div key={i} className="flex items-center gap-2 p-2.5 rounded-xl bg-[var(--elevated)]">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-light)] flex-shrink-0" />
+                    <p className="text-sm text-[var(--text-2)] font-mono">{range.trim()}</p>
                   </div>
                 ))}
               </div>
@@ -99,28 +102,28 @@ export default async function CompanyPage({ params }: Props) {
         {/* Open roles */}
         <div className="card p-6">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+            <h2 className="text-[10px] font-bold text-[var(--text-3)] uppercase tracking-widest flex items-center gap-2 font-mono">
               <span>💼</span> Open SWE Roles ({company.open_roles})
             </h2>
             {company.open_roles > 0 && (
-              <Link href={`/?company=${company.id}`} className="text-xs text-indigo-600 hover:text-indigo-800 font-medium">
+              <Link href={`/?company=${company.id}`} className="text-xs text-[var(--accent-light)] hover:text-[var(--text-1)] font-medium transition-colors">
                 View all →
               </Link>
             )}
           </div>
 
           {company.jobs.length === 0 ? (
-            <div className="text-center py-8">
-              <p className="text-slate-400 text-sm">No open SWE roles right now</p>
-              <p className="text-slate-300 text-xs mt-1">Jobs refresh every 6 hours</p>
+            <div className="text-center py-10">
+              <p className="text-[var(--text-3)] text-sm">No open SWE roles right now</p>
+              <p className="text-[var(--text-3)] text-xs mt-1 font-mono">Jobs refresh every 6 hours</p>
             </div>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               {company.jobs.map((job) => (
-                <div key={job.id} className="flex items-center gap-3 p-3.5 rounded-xl hover:bg-slate-50 transition-colors group">
+                <div key={job.id} className="flex items-center gap-3 p-3.5 rounded-xl hover:bg-[var(--elevated)] transition-colors group">
                   <div className="flex items-center gap-2 flex-1 min-w-0">
                     <LevelBadge level={job.level} />
-                    <span className="text-sm font-medium text-slate-800 truncate group-hover:text-indigo-700 transition-colors">
+                    <span className="text-sm font-medium text-[var(--text-1)] truncate group-hover:text-[var(--accent-light)] transition-colors">
                       {job.title}
                     </span>
                     <RemotePill remote={job.remote} />

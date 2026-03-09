@@ -8,26 +8,26 @@ interface JobGridProps {
 
 function SkeletonCard() {
   return (
-    <div className="card p-5 flex flex-col gap-4 animate-pulse">
+    <div className="card p-5 flex flex-col gap-4">
       <div className="flex gap-3">
-        <div className="w-11 h-11 rounded-xl bg-slate-100 flex-shrink-0" />
-        <div className="flex-1 space-y-2">
-          <div className="h-3 bg-slate-100 rounded-full w-1/3" />
-          <div className="h-4 bg-slate-100 rounded-full w-5/6" />
-          <div className="h-4 bg-slate-100 rounded-full w-3/4" />
+        <div className="w-10 h-10 rounded-xl skeleton flex-shrink-0" />
+        <div className="flex-1 space-y-2 pt-1">
+          <div className="h-2.5 skeleton rounded-full w-1/3" />
+          <div className="h-4 skeleton rounded-full w-5/6" />
+          <div className="h-4 skeleton rounded-full w-3/4" />
         </div>
       </div>
       <div className="flex gap-2">
-        <div className="h-6 w-24 bg-slate-100 rounded-lg" />
-        <div className="h-6 w-16 bg-slate-100 rounded-lg" />
+        <div className="h-5 w-24 skeleton rounded-md" />
+        <div className="h-5 w-16 skeleton rounded-md" />
       </div>
       <div className="flex justify-between">
-        <div className="h-3 w-28 bg-slate-100 rounded-full" />
-        <div className="h-3 w-16 bg-slate-100 rounded-full" />
+        <div className="h-2.5 w-28 skeleton rounded-full" />
+        <div className="h-2.5 w-16 skeleton rounded-full" />
       </div>
-      <div className="flex gap-2 pt-1 border-t border-slate-50">
-        <div className="flex-1 h-9 bg-slate-100 rounded-xl" />
-        <div className="w-20 h-9 bg-slate-100 rounded-xl" />
+      <div className="flex gap-2 pt-3 border-t border-[var(--border)]">
+        <div className="flex-1 h-8 skeleton rounded-xl" />
+        <div className="w-16 h-8 skeleton rounded-xl" />
       </div>
     </div>
   );
@@ -45,13 +45,13 @@ export function JobGrid({ jobs, loading }: JobGridProps) {
   if (jobs.length === 0) {
     return (
       <div className="card flex flex-col items-center justify-center py-20 text-center">
-        <div className="w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center mb-4">
-          <svg className="w-8 h-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="w-14 h-14 rounded-2xl bg-[var(--elevated)] flex items-center justify-center mb-4">
+          <svg className="w-7 h-7 text-[var(--text-3)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </div>
-        <p className="text-base font-semibold text-slate-700 mb-1">No jobs found</p>
-        <p className="text-sm text-slate-400">Try broadening your search or clearing filters</p>
+        <p className="text-sm font-semibold text-[var(--text-1)] mb-1">No jobs found</p>
+        <p className="text-xs text-[var(--text-3)]">Try broadening your search or clearing filters</p>
       </div>
     );
   }

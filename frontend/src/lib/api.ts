@@ -1,8 +1,5 @@
-import type { PaginatedJobs, JobDetail, CompaniesResponse, CompanyDetail, PrepPlan, ContentType } from "./types";
+import type { PaginatedJobs, JobDetail, CompaniesResponse, CompanyDetail, PrepPlan, ContentType, ResumeAnalysis } from "./types";
 
-// Server components run in Node.js — relative URLs don't work there.
-// Browser calls go to /api/* which Next.js rewrites to the backend.
-// Server calls go directly to the backend container.
 const isServer = typeof window === "undefined";
 const API_BASE = isServer
   ? (process.env.BACKEND_URL || "http://localhost:8001")
@@ -59,6 +56,22 @@ export function getCompany(slug: string): Promise<CompanyDetail> {
 
 export function getPrep(jobId: number, type: ContentType): Promise<PrepPlan> {
   return apiFetch<PrepPlan>(`/api/jobs/${jobId}/prep/${type}`);
+}
+
+export function getPersonalizedPrep(jobId: number, type: ContentType, resumeText: string): Promise<PrepPlan> {
+  return apiFetch<PrepPlan>(`/api/jobs/${jobId}/prep/${type}/personalized`, {
+    method: "POST",
+    body: JSON.stringify({ resume_text: resumeText }),
+    next: { revalidate: 0 },
+  } as RequestInit);
+}
+
+export function analyzeResume(resumeText: string): Promise<ResumeAnalysis> {
+  return apiFetch<ResumeAnalysis>("/api/resume/analyze", {
+    method: "POST",
+    body: JSON.stringify({ resume_text: resumeText }),
+    next: { revalidate: 0 },
+  } as RequestInit);
 }
 
 export function refreshJobs(): Promise<{ refreshed: number }> {

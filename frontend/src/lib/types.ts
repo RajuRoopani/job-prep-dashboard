@@ -53,11 +53,46 @@ export interface CompaniesResponse {
 export type ContentType = "coding" | "system_design" | "behavioral" | "company_tips" | "edge_tech";
 
 export interface PrepPlan {
-  id: number;
+  id?: number;
   job_id: number;
   content_type: ContentType;
   content: string;
   model: string;
-  generated_at: string;
+  generated_at?: string;
   cached: boolean;
+  personalized?: boolean;
+}
+
+export interface ResumeProfile {
+  name: string;
+  level: string;
+  years_experience: number;
+  current_role: string;
+  skills: string[];
+  previous_companies: string[];
+  education: string;
+  headline: string;
+  strengths: string[];
+  specializations: string[];
+}
+
+export interface JobMatch {
+  job_id: number;
+  match_score: number;
+  match_reasons: string[];
+  skill_gaps: string[];
+  title: string;
+  company_name: string;
+  company_slug: string;
+  company_logo_url: string;
+  company_tier: string;
+  level: string;
+  remote: boolean;
+  url: string;
+  location: string;
+}
+
+export interface ResumeAnalysis {
+  profile: ResumeProfile;
+  matches: JobMatch[];
 }
