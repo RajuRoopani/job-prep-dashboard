@@ -2,8 +2,8 @@
 
 import { useState, useRef, useCallback } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { analyzeResume } from "@/lib/api";
+import { CompanyLogo } from "@/components/ui/CompanyLogo";
 import type { ResumeProfile, JobMatch } from "@/lib/types";
 import { LevelBadge } from "@/components/jobs/LevelBadge";
 import { RemotePill } from "@/components/jobs/RemotePill";
@@ -114,12 +114,14 @@ function MatchCard({ match }: { match: JobMatch }) {
       <div className="flex-1 min-w-0">
         {/* Header */}
         <div className="flex items-start gap-2 mb-2">
-          <div className="w-8 h-8 rounded-lg bg-[var(--elevated)] border border-[var(--border)] flex items-center justify-center overflow-hidden flex-shrink-0">
-            {match.company_logo_url ? (
-              <Image src={match.company_logo_url} alt={match.company_name} width={32} height={32} className="object-contain p-0.5" />
-            ) : (
-              <span className="text-xs font-bold text-[var(--text-3)]">{match.company_name[0]}</span>
-            )}
+          <div className="w-8 h-8 rounded-lg bg-[var(--elevated)] border border-[var(--border)] overflow-hidden flex-shrink-0">
+            <CompanyLogo
+              name={match.company_name}
+              logoUrl={match.company_logo_url}
+              size={32}
+              imgClassName="object-contain p-0.5"
+              className="rounded-lg"
+            />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-[11px] text-[var(--text-3)] font-semibold" style={{ fontFamily: "var(--font-mono)" }}>{match.company_name}</p>
@@ -233,13 +235,26 @@ export default function MatchPage() {
     }
   }, []);
 
-  const handleFile = useCallback((file: File) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const text = e.target?.result as string;
-      setResumeText(text);
-    };
-    reader.readAsText(file);
+  const handleFile = useCallback(async (file: File) => {
+    if (file.name.toLowerCase().endsWith(".pdf")) {
+      const formData = new FormData();
+      formData.append("file", file);
+      try {
+        const res = await fetch("/api/resume/parse-pdf", { method: "POST", body: formData });
+        const data = await res.json();
+        if (!res.ok) {
+          setError(data.detail || "Failed to parse PDF. Please paste your resume as text.");
+          return;
+        }
+        setResumeText(data.text);
+      } catch {
+        setError("Failed to parse PDF. Please paste your resume as text.");
+      }
+    } else {
+      const reader = new FileReader();
+      reader.onload = (e) => setResumeText(e.target?.result as string);
+      reader.readAsText(file);
+    }
   }, []);
 
   const scoreColor = (score: number) =>

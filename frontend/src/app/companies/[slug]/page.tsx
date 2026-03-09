@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { getCompany } from "@/lib/api";
+import { CompanyLogo } from "@/components/ui/CompanyLogo";
 import { LevelBadge } from "@/components/jobs/LevelBadge";
 import { RemotePill } from "@/components/jobs/RemotePill";
 
@@ -33,12 +33,14 @@ export default async function CompanyPage({ params }: Props) {
           </nav>
 
           <div className="flex items-start gap-5">
-            <div className="w-16 h-16 rounded-2xl bg-[var(--elevated)] border border-[var(--border)] flex items-center justify-center overflow-hidden flex-shrink-0">
-              {company.logo_url ? (
-                <Image src={company.logo_url} alt={company.name} width={64} height={64} className="object-contain p-2" />
-              ) : (
-                <span className="text-2xl font-bold text-[var(--text-3)]">{company.name[0]}</span>
-              )}
+            <div className="w-16 h-16 rounded-2xl bg-[var(--elevated)] border border-[var(--border)] overflow-hidden flex-shrink-0">
+              <CompanyLogo
+                name={company.name}
+                logoUrl={company.logo_url}
+                size={64}
+                imgClassName="object-contain p-2"
+                className="rounded-2xl"
+              />
             </div>
             <div>
               <div className="flex items-center gap-3 mb-2">

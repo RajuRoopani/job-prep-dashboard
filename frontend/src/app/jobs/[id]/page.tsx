@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { getJob } from "@/lib/api";
 import { LevelBadge } from "@/components/jobs/LevelBadge";
 import { RemotePill } from "@/components/jobs/RemotePill";
 import { PrepAccordion } from "@/components/prep/PrepAccordion";
+import { CompanyLogo } from "@/components/ui/CompanyLogo";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -40,12 +40,14 @@ export default async function JobDetailPage({ params }: Props) {
           </nav>
 
           <div className="flex items-start gap-5">
-            <div className="w-16 h-16 rounded-2xl bg-[var(--elevated)] border border-[var(--border)] flex items-center justify-center overflow-hidden flex-shrink-0">
-              {job.company_logo_url ? (
-                <Image src={job.company_logo_url} alt={job.company_name} width={64} height={64} className="object-contain p-2" />
-              ) : (
-                <span className="text-2xl font-bold text-[var(--text-3)]">{job.company_name[0]}</span>
-              )}
+            <div className="w-16 h-16 rounded-2xl bg-[var(--elevated)] border border-[var(--border)] overflow-hidden flex-shrink-0">
+              <CompanyLogo
+                name={job.company_name}
+                logoUrl={job.company_logo_url}
+                size={64}
+                imgClassName="object-contain p-2"
+                className="rounded-2xl"
+              />
             </div>
             <div className="flex-1">
               <p className="text-[var(--text-3)] text-xs mb-1 font-mono uppercase tracking-wide">{job.company_name}</p>

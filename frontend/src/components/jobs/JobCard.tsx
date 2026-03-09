@@ -1,27 +1,23 @@
 import Link from "next/link";
-import Image from "next/image";
 import type { Job } from "@/lib/types";
 import { LevelBadge } from "./LevelBadge";
 import { RemotePill } from "./RemotePill";
 import { timeAgo } from "@/lib/utils";
+import { CompanyLogo } from "@/components/ui/CompanyLogo";
 
 export function JobCard({ job }: { job: Job }) {
   return (
     <div className="card p-5 flex flex-col gap-4 group">
       {/* Header */}
       <div className="flex items-start gap-3">
-        <div className="w-10 h-10 rounded-xl bg-[var(--elevated)] border border-[var(--border)] flex items-center justify-center overflow-hidden flex-shrink-0">
-          {job.company_logo_url ? (
-            <Image
-              src={job.company_logo_url}
-              alt={job.company_name}
-              width={40}
-              height={40}
-              className="object-contain p-1"
-            />
-          ) : (
-            <span className="text-sm font-bold text-[var(--text-3)]">{job.company_name[0]}</span>
-          )}
+        <div className="w-10 h-10 rounded-xl bg-[var(--elevated)] border border-[var(--border)] overflow-hidden flex-shrink-0">
+          <CompanyLogo
+            name={job.company_name}
+            logoUrl={job.company_logo_url}
+            size={40}
+            imgClassName="object-contain p-1"
+            className="rounded-xl"
+          />
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-[11px] font-medium text-[var(--text-3)] mb-0.5 font-mono uppercase tracking-wide">{job.company_name}</p>
