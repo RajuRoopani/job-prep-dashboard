@@ -15,6 +15,14 @@
 
 ---
 
+## Demo
+
+https://github.com/user-attachments/assets/ascend-demo.mp4
+
+> Full walkthrough: job board → search & filter → job detail + AI prep plans → company directory → company research → career match
+
+---
+
 ## Screenshots
 
 ### Live Job Board — 445+ roles, refreshed every 6 hours
