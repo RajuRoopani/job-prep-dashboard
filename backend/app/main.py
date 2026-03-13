@@ -13,6 +13,7 @@ from app.prep.router import router as prep_router
 from app.resume.router import router as resume_router
 from app.profiles.router import router as profiles_router
 from app.research.router import router as research_router
+from app.research.chat_service import ensure_chat_table
 from app.scheduler import start_scheduler, stop_scheduler
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(levelname)s %(message)s")
@@ -48,6 +49,7 @@ async def lifespan(app: FastAPI):
             )
 
     start_scheduler()
+    await ensure_chat_table()
     logger.info("Application started")
 
     yield

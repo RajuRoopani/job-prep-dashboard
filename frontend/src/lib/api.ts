@@ -82,7 +82,7 @@ export function analyzeResume(resumeText: string): Promise<ResumeAnalysis> {
   } as RequestInit);
 }
 
-export function researchCompany(companyName: string, roleHint?: string): Promise<{ company_name: string; content: string; cached: boolean; generated_at: string }> {
+export function researchCompany(companyName: string, roleHint?: string): Promise<{ company_key: string; company_name: string; content: string; cached: boolean; generated_at: string }> {
   return apiFetch("/api/research/company", {
     method: "POST",
     body: JSON.stringify({ company_name: companyName, role_hint: roleHint ?? "" }),
@@ -114,4 +114,27 @@ export function unmarkApplied(analysisId: number, jobId: number): Promise<{ appl
 
 export function markPrepViewed(analysisId: number, jobId: number, contentType: ContentType): Promise<{ ok: boolean }> {
   return apiFetch(`/api/profiles/${analysisId}/progress/${jobId}/${contentType}`, noCache({ method: "POST" }));
+}
+
+// ── Company chat ──────────────────────────────────────────────────────────────
+
+export interface ChatMessage {
+  id: number;
+  role: "user" | "assistant";
+  content: string;
+}
+
+export function getChatHistory(companyKey: string, sessionId: string): Promise<{ messages: ChatMessage[]; company_key: string }> {
+  return apiFetch(`/api/research/chat/${companyKey}?session_id=${encodeURIComponent(sessionId)}`, noCache());
+}
+
+export function chatCompany(companyKey: string, sessionId: string, message: string): Promise<{ reply: string }> {
+  return apiFetch("/api/research/chat", noCache({
+    method: "POST",
+    body: JSON.stringify({ company_key: companyKey, session_id: sessionId, message }),
+  }));
+}
+
+export function clearChatHistory(companyKey: string, sessionId: string): Promise<{ deleted: number }> {
+  return apiFetch(`/api/research/chat/${companyKey}?session_id=${encodeURIComponent(sessionId)}`, noCache({ method: "DELETE" }));
 }

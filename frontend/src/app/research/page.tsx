@@ -3,6 +3,8 @@
 import { useState, useRef } from "react";
 import { researchCompany } from "@/lib/api";
 import { MarkdownRenderer } from "@/components/prep/MarkdownRenderer";
+import { CompanyChat } from "@/components/research/CompanyChat";
+import { Group as PanelGroup, Panel, Separator as PanelResizeHandle } from "react-resizable-panels";
 import Link from "next/link";
 
 const SUGGESTIONS = [
@@ -15,9 +17,10 @@ const SUGGESTIONS = [
 export default function ResearchPage() {
   const [query, setQuery] = useState("");
   const [roleHint, setRoleHint] = useState("");
-  const [result, setResult] = useState<{ company_name: string; content: string; cached: boolean } | null>(null);
+  const [result, setResult] = useState<{ company_key: string; company_name: string; content: string; cached: boolean } | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [chatExpanded, setChatExpanded] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function search(name: string, hint?: string) {
@@ -155,59 +158,98 @@ export default function ResearchPage() {
             ))}
           </div>
         )}
+      </div>
 
-        {/* Result */}
-        {result && !loading && (
-          <div className="space-y-4">
-            {/* Header bar */}
-            <div className="card-static px-5 py-3.5 flex items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-[var(--elevated)] border border-[var(--border)] flex items-center justify-center text-base font-bold text-[var(--text-2)]">
-                  {result.company_name.charAt(0).toUpperCase()}
-                </div>
-                <div>
-                  <p className="font-bold text-[var(--text-1)] text-sm">{result.company_name}</p>
-                  <p className="text-[11px] text-[var(--text-3)] font-mono">
-                    {result.cached ? "Cached result" : "Just generated"} · claude-sonnet-4-6
-                  </p>
-                </div>
+      {/* Result — full-width split panel outside narrow container */}
+      {result && !loading && (
+        <div className="px-4 sm:px-6 lg:px-8 pb-4" style={{ maxWidth: "calc(100vw - 2rem)", margin: "0 auto" }}>
+          {/* Header bar */}
+          <div className="card-static px-5 py-3.5 flex items-center justify-between gap-4 mb-4 max-w-3xl mx-auto">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-[var(--elevated)] border border-[var(--border)] flex items-center justify-center text-base font-bold text-[var(--text-2)]">
+                {result.company_name.charAt(0).toUpperCase()}
               </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => { setResult(null); setQuery(""); inputRef.current?.focus(); }}
-                  className="btn-ghost text-xs px-3 py-1.5"
-                >
-                  New search
-                </button>
-                <button
-                  onClick={() => search(result.company_name)}
-                  className="btn-ghost text-xs px-3 py-1.5"
-                  title="Regenerate"
-                >
-                  ↺ Refresh
-                </button>
-              </div>
-            </div>
-
-            {/* Markdown content */}
-            <div className="card p-6 sm:p-8">
-              <MarkdownRenderer content={result.content} />
-            </div>
-
-            {/* CTA: check if they have tracked jobs */}
-            <div className="card-static px-5 py-4 flex items-center justify-between gap-4">
               <div>
-                <p className="text-sm font-semibold text-[var(--text-1)]">Have a resume? Get personalized matches.</p>
-                <p className="text-xs text-[var(--text-3)]">Upload your resume to see which real open roles fit you best.</p>
+                <p className="font-bold text-[var(--text-1)] text-sm">{result.company_name}</p>
+                <p className="text-[11px] text-[var(--text-3)] font-mono">
+                  {result.cached ? "Cached result" : "Just generated"} · claude-sonnet-4-6
+                </p>
               </div>
-              <div className="flex gap-2 flex-shrink-0">
-                <Link href="/companies" className="btn-ghost text-xs px-3 py-1.5">Browse Companies</Link>
-                <Link href="/match" className="btn-primary text-xs px-3 py-1.5">Match Resume ✨</Link>
-              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => { setResult(null); setQuery(""); }}
+                className="btn-ghost text-xs px-3 py-1.5"
+              >
+                New search
+              </button>
+              <button
+                onClick={() => search(result.company_name)}
+                className="btn-ghost text-xs px-3 py-1.5"
+                title="Regenerate"
+              >
+                ↺ Refresh
+              </button>
             </div>
           </div>
-        )}
-      </div>
+
+          {/* Full-screen chat mode */}
+          {chatExpanded ? (
+            <div style={{ height: "calc(100vh - 220px)", minHeight: 500, borderRadius: 12, overflow: "hidden", border: "1px solid var(--border)" }}>
+              <CompanyChat
+                companyKey={result.company_key}
+                companyName={result.company_name}
+                expanded={true}
+                onToggleExpand={() => setChatExpanded(false)}
+              />
+            </div>
+          ) : (
+            /* Split panel: research left, chat right */
+            <PanelGroup
+              orientation="horizontal"
+              style={{ height: "calc(100vh - 220px)", minHeight: 500, borderRadius: 12, overflow: "hidden", border: "1px solid var(--border)" }}
+            >
+              <Panel defaultSize={62} minSize={35}>
+                <div style={{ height: "100%", overflowY: "auto", background: "var(--surface)" }}>
+                  <div className="p-6 sm:p-8">
+                    <MarkdownRenderer content={result.content} />
+                  </div>
+                  {/* CTA */}
+                  <div className="card-static mx-6 mb-6 px-5 py-4 flex items-center justify-between gap-4">
+                    <div>
+                      <p className="text-sm font-semibold text-[var(--text-1)]">Have a resume? Get personalized matches.</p>
+                      <p className="text-xs text-[var(--text-3)]">Upload your resume to see which real open roles fit you best.</p>
+                    </div>
+                    <div className="flex gap-2 flex-shrink-0">
+                      <Link href="/companies" className="btn-ghost text-xs px-3 py-1.5">Browse</Link>
+                      <Link href="/match" className="btn-primary text-xs px-3 py-1.5">Match ✨</Link>
+                    </div>
+                  </div>
+                </div>
+              </Panel>
+
+              <PanelResizeHandle
+                style={{
+                  width: 5,
+                  background: "var(--border)",
+                  cursor: "col-resize",
+                  transition: "background 0.15s",
+                  flexShrink: 0,
+                }}
+              />
+
+              <Panel defaultSize={38} minSize={28}>
+                <CompanyChat
+                  companyKey={result.company_key}
+                  companyName={result.company_name}
+                  expanded={false}
+                  onToggleExpand={() => setChatExpanded(true)}
+                />
+              </Panel>
+            </PanelGroup>
+          )}
+        </div>
+      )}
     </>
   );
 }
