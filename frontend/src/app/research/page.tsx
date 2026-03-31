@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { researchCompany } from "@/lib/api";
+import { researchCompany, getCompanyJobsSafe } from "@/lib/api";
 import { MarkdownRenderer } from "@/components/prep/MarkdownRenderer";
 import { CompanyChat } from "@/components/research/CompanyChat";
+import { ResearchJobListings } from "@/components/research/ResearchJobListings";
 import { Group as PanelGroup, Panel, Separator as PanelResizeHandle } from "react-resizable-panels";
 import Link from "next/link";
+import type { CompanyDetail } from "@/lib/types";
 
 const SUGGESTIONS = [
   "Stripe", "Airbnb", "Uber", "DoorDash", "Snowflake",
@@ -21,6 +23,7 @@ export default function ResearchPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [chatExpanded, setChatExpanded] = useState(false);
+  const [jobs, setJobs] = useState<CompanyDetail["jobs"] | null | undefined>(undefined);
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function search(name: string, hint?: string) {
@@ -29,9 +32,14 @@ export default function ResearchPage() {
     setLoading(true);
     setError(null);
     setResult(null);
+    setJobs(undefined);
     try {
       const data = await researchCompany(companyName, hint ?? roleHint);
       setResult(data);
+      // Fire job lookup in background — does not block research display
+      getCompanyJobsSafe(data.company_key).then((company) => {
+        setJobs(company ? company.jobs : null);
+      });
     } catch (e) {
       setError(String(e));
     } finally {
@@ -214,6 +222,10 @@ export default function ResearchPage() {
                   <div className="p-6 sm:p-8">
                     <MarkdownRenderer content={result.content} />
                   </div>
+                  {/* Job openings */}
+                  {jobs !== undefined && (
+                    <ResearchJobListings jobs={jobs} companyName={result.company_name} />
+                  )}
                   {/* CTA */}
                   <div className="card-static mx-6 mb-6 px-5 py-4 flex items-center justify-between gap-4">
                     <div>
