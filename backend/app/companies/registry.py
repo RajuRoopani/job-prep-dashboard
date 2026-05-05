@@ -1,15 +1,18 @@
 """
-Company registry — 31 companies (11 FAANG++ + 20 AI Startups).
-Board IDs that 404 at fetch time are silently skipped.
+Company registry — 43 companies across FAANG++, AI Startups, and YC Unicorns.
+Verified ATS board IDs as of 2026-05. Companies with no public ATS are marked
+ats_type="none" and kept for research/interview-prep purposes only.
 """
 
 COMPANY_REGISTRY: list[dict] = [
     # ── FAANG++ ──────────────────────────────────────────────────────────────
+    # Google, Meta, Amazon, Apple, Microsoft, NVIDIA use proprietary portals
+    # with no public API — kept for research; jobs not fetched.
     {
         "name": "Google",
         "slug": "google",
-        "ats_type": "greenhouse",
-        "board_id": "google",
+        "ats_type": "none",
+        "board_id": "",
         "tier": "faang_plus",
         "hq": "Mountain View, CA",
         "size": "180,000+",
@@ -21,8 +24,8 @@ COMPANY_REGISTRY: list[dict] = [
     {
         "name": "Meta",
         "slug": "meta",
-        "ats_type": "greenhouse",
-        "board_id": "meta",
+        "ats_type": "none",
+        "board_id": "",
         "tier": "faang_plus",
         "hq": "Menlo Park, CA",
         "size": "75,000+",
@@ -34,8 +37,8 @@ COMPANY_REGISTRY: list[dict] = [
     {
         "name": "Amazon",
         "slug": "amazon",
-        "ats_type": "greenhouse",
-        "board_id": "amazon",
+        "ats_type": "none",
+        "board_id": "",
         "tier": "faang_plus",
         "hq": "Seattle, WA",
         "size": "1,500,000+",
@@ -47,8 +50,8 @@ COMPANY_REGISTRY: list[dict] = [
     {
         "name": "Apple",
         "slug": "apple",
-        "ats_type": "greenhouse",
-        "board_id": "apple",
+        "ats_type": "none",
+        "board_id": "",
         "tier": "faang_plus",
         "hq": "Cupertino, CA",
         "size": "160,000+",
@@ -60,7 +63,7 @@ COMPANY_REGISTRY: list[dict] = [
     {
         "name": "Netflix",
         "slug": "netflix",
-        "ats_type": "greenhouse",
+        "ats_type": "lever",
         "board_id": "netflix",
         "tier": "faang_plus",
         "hq": "Los Gatos, CA",
@@ -73,8 +76,8 @@ COMPANY_REGISTRY: list[dict] = [
     {
         "name": "Microsoft",
         "slug": "microsoft",
-        "ats_type": "greenhouse",
-        "board_id": "microsoft",
+        "ats_type": "none",
+        "board_id": "",
         "tier": "faang_plus",
         "hq": "Redmond, WA",
         "size": "220,000+",
@@ -86,8 +89,8 @@ COMPANY_REGISTRY: list[dict] = [
     {
         "name": "Nvidia",
         "slug": "nvidia",
-        "ats_type": "greenhouse",
-        "board_id": "nvidia",
+        "ats_type": "none",
+        "board_id": "",
         "tier": "faang_plus",
         "hq": "Santa Clara, CA",
         "size": "30,000+",
@@ -99,7 +102,7 @@ COMPANY_REGISTRY: list[dict] = [
     {
         "name": "OpenAI",
         "slug": "openai",
-        "ats_type": "greenhouse",
+        "ats_type": "ashby",
         "board_id": "openai",
         "tier": "faang_plus",
         "hq": "San Francisco, CA",
@@ -153,8 +156,8 @@ COMPANY_REGISTRY: list[dict] = [
     {
         "name": "Mistral AI",
         "slug": "mistral-ai",
-        "ats_type": "greenhouse",
-        "board_id": "mistralai",
+        "ats_type": "ashby",
+        "board_id": "mistral",
         "tier": "ai_startup",
         "hq": "Paris, France",
         "size": "200+",
@@ -166,7 +169,7 @@ COMPANY_REGISTRY: list[dict] = [
     {
         "name": "Cohere",
         "slug": "cohere",
-        "ats_type": "greenhouse",
+        "ats_type": "ashby",
         "board_id": "cohere",
         "tier": "ai_startup",
         "hq": "Toronto, CA",
@@ -192,8 +195,8 @@ COMPANY_REGISTRY: list[dict] = [
     {
         "name": "Hugging Face",
         "slug": "hugging-face",
-        "ats_type": "greenhouse",
-        "board_id": "huggingface",
+        "ats_type": "none",
+        "board_id": "",
         "tier": "ai_startup",
         "hq": "New York, NY",
         "size": "300+",
@@ -205,8 +208,8 @@ COMPANY_REGISTRY: list[dict] = [
     {
         "name": "Runway",
         "slug": "runway",
-        "ats_type": "greenhouse",
-        "board_id": "runwayml",
+        "ats_type": "ashby",
+        "board_id": "runway",
         "tier": "ai_startup",
         "hq": "New York, NY",
         "size": "200+",
@@ -218,8 +221,8 @@ COMPANY_REGISTRY: list[dict] = [
     {
         "name": "Perplexity",
         "slug": "perplexity",
-        "ats_type": "greenhouse",
-        "board_id": "perplexityai",
+        "ats_type": "ashby",
+        "board_id": "perplexity",
         "tier": "ai_startup",
         "hq": "San Francisco, CA",
         "size": "200+",
@@ -244,7 +247,7 @@ COMPANY_REGISTRY: list[dict] = [
     {
         "name": "Anyscale",
         "slug": "anyscale",
-        "ats_type": "greenhouse",
+        "ats_type": "ashby",
         "board_id": "anyscale",
         "tier": "ai_startup",
         "hq": "San Francisco, CA",
@@ -258,7 +261,7 @@ COMPANY_REGISTRY: list[dict] = [
         "name": "Modal",
         "slug": "modal",
         "ats_type": "ashby",
-        "board_id": "modal-labs",
+        "board_id": "modal",
         "tier": "ai_startup",
         "hq": "New York, NY",
         "size": "50+",
@@ -270,7 +273,7 @@ COMPANY_REGISTRY: list[dict] = [
     {
         "name": "Weaviate",
         "slug": "weaviate",
-        "ats_type": "greenhouse",
+        "ats_type": "ashby",
         "board_id": "weaviate",
         "tier": "ai_startup",
         "hq": "Amsterdam, NL",
@@ -283,8 +286,8 @@ COMPANY_REGISTRY: list[dict] = [
     {
         "name": "Weights & Biases",
         "slug": "weights-biases",
-        "ats_type": "greenhouse",
-        "board_id": "wandb",
+        "ats_type": "none",
+        "board_id": "",
         "tier": "ai_startup",
         "hq": "San Francisco, CA",
         "size": "400+",
@@ -296,7 +299,7 @@ COMPANY_REGISTRY: list[dict] = [
     {
         "name": "Replit",
         "slug": "replit",
-        "ats_type": "greenhouse",
+        "ats_type": "ashby",
         "board_id": "replit",
         "tier": "ai_startup",
         "hq": "San Francisco, CA",
@@ -310,7 +313,7 @@ COMPANY_REGISTRY: list[dict] = [
         "name": "Cursor",
         "slug": "cursor",
         "ats_type": "ashby",
-        "board_id": "anysphere",
+        "board_id": "cursor",
         "tier": "ai_startup",
         "hq": "San Francisco, CA",
         "size": "50+",
@@ -322,8 +325,8 @@ COMPANY_REGISTRY: list[dict] = [
     {
         "name": "Character AI",
         "slug": "character-ai",
-        "ats_type": "greenhouse",
-        "board_id": "characterai",
+        "ats_type": "ashby",
+        "board_id": "character",
         "tier": "ai_startup",
         "hq": "Menlo Park, CA",
         "size": "200+",
@@ -349,7 +352,7 @@ COMPANY_REGISTRY: list[dict] = [
         "name": "Pika",
         "slug": "pika",
         "ats_type": "ashby",
-        "board_id": "pika-labs",
+        "board_id": "pika",
         "tier": "ai_startup",
         "hq": "Palo Alto, CA",
         "size": "50+",
@@ -388,7 +391,7 @@ COMPANY_REGISTRY: list[dict] = [
         "name": "Cognition",
         "slug": "cognition",
         "ats_type": "ashby",
-        "board_id": "cognition-labs",
+        "board_id": "cognition",
         "tier": "ai_startup",
         "hq": "San Francisco, CA",
         "size": "50+",
@@ -400,7 +403,7 @@ COMPANY_REGISTRY: list[dict] = [
     {
         "name": "LangChain",
         "slug": "langchain",
-        "ats_type": "greenhouse",
+        "ats_type": "ashby",
         "board_id": "langchain",
         "tier": "ai_startup",
         "hq": "San Francisco, CA",
@@ -441,7 +444,7 @@ COMPANY_REGISTRY: list[dict] = [
     {
         "name": "Plaid",
         "slug": "plaid",
-        "ats_type": "greenhouse",
+        "ats_type": "ashby",
         "board_id": "plaid",
         "tier": "yc_unicorn",
         "hq": "San Francisco, CA",
@@ -454,8 +457,8 @@ COMPANY_REGISTRY: list[dict] = [
     {
         "name": "Rippling",
         "slug": "rippling",
-        "ats_type": "greenhouse",
-        "board_id": "rippling",
+        "ats_type": "none",
+        "board_id": "",
         "tier": "yc_unicorn",
         "hq": "San Francisco, CA",
         "size": "3,000+",
@@ -480,7 +483,7 @@ COMPANY_REGISTRY: list[dict] = [
     {
         "name": "Notion",
         "slug": "notion",
-        "ats_type": "greenhouse",
+        "ats_type": "ashby",
         "board_id": "notion",
         "tier": "yc_unicorn",
         "hq": "San Francisco, CA",
@@ -545,7 +548,7 @@ COMPANY_REGISTRY: list[dict] = [
     {
         "name": "Ramp",
         "slug": "ramp",
-        "ats_type": "greenhouse",
+        "ats_type": "ashby",
         "board_id": "ramp",
         "tier": "yc_unicorn",
         "hq": "New York, NY",
@@ -567,5 +570,18 @@ COMPANY_REGISTRY: list[dict] = [
         "about": "Low-code platform for business apps. YC S15. $11B valuation. Spreadsheet meets DB.",
         "loop_desc": "Technical screen → take-home → 3-4 onsite (product, coding, system design)",
         "comp_range": "Senior: $280k–$420k | Staff: $400k–$580k",
+    },
+    {
+        "name": "Figma",
+        "slug": "figma",
+        "ats_type": "greenhouse",
+        "board_id": "figma",
+        "tier": "yc_unicorn",
+        "hq": "San Francisco, CA",
+        "size": "1,200+",
+        "logo_url": "https://logo.clearbit.com/figma.com",
+        "about": "Collaborative design platform. $12.5B valuation. Industry-standard for product design.",
+        "loop_desc": "Recruiter screen → technical screen → 4 onsite rounds (coding, systems, collaboration)",
+        "comp_range": "Senior: $300k–$480k | Staff: $450k–$650k",
     },
 ]

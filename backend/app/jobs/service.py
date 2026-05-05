@@ -63,6 +63,8 @@ def detect_level(title: str) -> str:
 
 async def _fetch_company(company: dict, company_id: int) -> int:
     ats = company["ats_type"]
+    if ats == "none":
+        return 0
     fetcher = _FETCHERS.get(ats)
     if not fetcher:
         logger.warning("No fetcher for ATS type: %s", ats)

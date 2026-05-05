@@ -5,6 +5,15 @@ import type { JobFilters } from "@/lib/api";
 import type { Company } from "@/lib/types";
 
 const LEVELS = ["L3", "L4", "L5", "L6", "L7+"];
+
+const LOCATIONS = [
+  { label: "Bay Area", value: "san francisco" },
+  { label: "New York", value: "new york" },
+  { label: "Seattle", value: "seattle" },
+  { label: "London", value: "london" },
+  { label: "Austin", value: "austin" },
+  { label: "Bengaluru", value: "bengaluru" },
+];
 const LEVEL_COLORS: Record<string, string> = {
   "L3":  "text-[#10B981] border-[#10B981]/30 bg-[#10B981]/10",
   "L4":  "text-[#60A5FA] border-[#60A5FA]/30 bg-[#60A5FA]/10",
@@ -34,7 +43,7 @@ export function JobFiltersPanel({ filters, companies, onChange }: JobFiltersProp
     [filters, onChange]
   );
 
-  const hasActive = !!(filters.q || filters.level || filters.remote || filters.company || filters.tier);
+  const hasActive = !!(filters.q || filters.level || filters.remote || filters.company || filters.tier || filters.location);
 
   return (
     <aside className="space-y-6">
@@ -122,6 +131,28 @@ export function JobFiltersPanel({ filters, companies, onChange }: JobFiltersProp
             </svg>
           )}
         </button>
+      </Section>
+
+      {/* Location */}
+      <Section title="Location">
+        <div className="flex flex-wrap gap-1.5">
+          {LOCATIONS.map(({ label, value }) => {
+            const active = filters.location === value;
+            return (
+              <button
+                key={value}
+                onClick={() => update({ location: active ? undefined : value })}
+                className={`px-2.5 py-1 rounded-full text-[11px] font-medium transition-all border ${
+                  active
+                    ? "bg-[var(--accent)]/15 text-[var(--accent-light)] border-[var(--accent)]/30"
+                    : "border-[var(--border)] text-[var(--text-3)] hover:border-[var(--border-hover)] hover:text-[var(--text-2)]"
+                }`}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
       </Section>
 
       {/* Company */}

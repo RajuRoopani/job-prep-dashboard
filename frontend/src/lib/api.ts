@@ -25,6 +25,7 @@ export interface JobFilters {
   remote?: boolean;
   company?: number;
   tier?: string;
+  location?: string;
   page?: number;
   limit?: number;
 }
@@ -36,6 +37,7 @@ export function getJobs(filters: JobFilters = {}): Promise<PaginatedJobs> {
   if (filters.remote !== undefined) params.set("remote", String(filters.remote));
   if (filters.company) params.set("company", String(filters.company));
   if (filters.tier) params.set("tier", filters.tier);
+  if (filters.location) params.set("location", filters.location);
   if (filters.page) params.set("page", String(filters.page));
   if (filters.limit) params.set("limit", String(filters.limit));
   const qs = params.toString();

@@ -27,8 +27,9 @@ WHERE j.active = TRUE
   AND ($3::boolean IS NULL OR j.remote = $3)
   AND ($4::bigint IS NULL OR j.company_id = $4)
   AND ($5::text IS NULL OR c.tier = $5)
+  AND ($6::text IS NULL OR LOWER(j.location) LIKE $6)
 ORDER BY j.fetched_at DESC, j.id DESC
-LIMIT $6 OFFSET $7
+LIMIT $7 OFFSET $8
 """
 
 COUNT_JOBS = """
@@ -42,6 +43,7 @@ WHERE j.active = TRUE
   AND ($3::boolean IS NULL OR j.remote = $3)
   AND ($4::bigint IS NULL OR j.company_id = $4)
   AND ($5::text IS NULL OR c.tier = $5)
+  AND ($6::text IS NULL OR LOWER(j.location) LIKE $6)
 """
 
 DEACTIVATE_STALE_JOBS = """

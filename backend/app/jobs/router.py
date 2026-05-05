@@ -15,13 +15,15 @@ async def list_jobs(
     remote: bool | None = Query(None),
     company: int | None = Query(None, description="company_id"),
     tier: str | None = Query(None, description="faang_plus|ai_startup"),
+    location: str | None = Query(None, description="City/region substring match"),
     page: int = Query(1, ge=1),
     limit: int = Query(20, ge=1, le=100),
 ):
     offset = (page - 1) * limit
+    location_pattern = f"%{location.lower()}%" if location else None
     async with get_db() as conn:
-        rows = await conn.fetch(LIST_JOBS, q, level, remote, company, tier, limit, offset)
-        total = await conn.fetchval(COUNT_JOBS, q, level, remote, company, tier)
+        rows = await conn.fetch(LIST_JOBS, q, level, remote, company, tier, location_pattern, limit, offset)
+        total = await conn.fetchval(COUNT_JOBS, q, level, remote, company, tier, location_pattern)
 
     return {
         "items": [dict(r) for r in rows],
